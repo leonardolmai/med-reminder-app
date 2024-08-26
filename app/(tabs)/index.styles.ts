@@ -39,10 +39,18 @@ export const AccountContainer = styled.View`
   background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.white};
 `;
 
+export const UserInformationContainer = styled.View`
+  margin: 0 32px;
+`;
+
 export const Name = styled.Text`
   font-size: 24px;
 `;
 
 export const Email = styled.Text`
   font-size: 14px;
+`;
+
+export const AccountOptionsContainer = styled.View`
+  margin: 0 32px;
 `;

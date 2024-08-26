@@ -45,6 +45,7 @@ export default function TabLayout() {
     >
       <Tabs.Screen name='index' options={{ headerShown: false, tabBarLabel: 'Início' }} />
       <Tabs.Screen name='medication-history' options={{ headerShown: false, tabBarLabel: 'Histórico' }} />
+      <Tabs.Screen name='account' options={{ headerShown: false, tabBarLabel: 'Conta' }} />
     </Tabs>
   );
 };
