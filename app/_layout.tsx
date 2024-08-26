@@ -12,6 +12,9 @@ export default function Layout() {
         <Stack.Screen name='signup' options={{ headerShown: false }} />
         <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
         <Stack.Screen name="users/update" options={{ headerShown: false }} />
+        <Stack.Screen name="medications/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="medications/create" options={{ headerShown: false }} />
+        <Stack.Screen name="medications/update/[id]" options={{ headerShown: false }} />
       </Stack>
     </ThemeProvider>
   );
