@@ -1,9 +1,11 @@
-import React from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons } from "@expo/vector-icons";
-import { theme } from '@/styles/theme';
+import { useTheme } from 'styled-components/native';
+import { DefaultTheme } from 'styled-components/native';
 
 export default function TabLayout() {
+  const theme: DefaultTheme = useTheme();
+
   return (
     <Tabs
       initialRouteName='index'
@@ -13,13 +15,18 @@ export default function TabLayout() {
 
           if (route.name === 'index') {
             iconName = focused ? 'home' : 'home-outline';
+          } else if (route.name === 'medication-history') {
+            iconName = focused ? 'time' : 'time-outline';
+          } else if (route.name === 'account') {
+            iconName = focused ? 'settings' : 'settings-outline';
           }
 
-          return <Ionicons name={iconName} size={size} color={color} />;
+          // return <Ionicons name={iconName} size={size} color={color} />;
+          return <Ionicons name={iconName} size={32} color={color} />;
         },
 
-        tabBarActiveTintColor: theme.colors.secondary,
-        tabBarInactiveTintColor: theme.colors.secondary,
+        tabBarActiveTintColor: theme.colors.blue500,
+        tabBarInactiveTintColor: theme.colors.black,
         headerShown: false,
         tabBarLabelStyle: {
           fontSize: 14,
@@ -27,11 +34,16 @@ export default function TabLayout() {
         tabBarStyle: {
           paddingBottom: 8,
           paddingTop: 5,
-          height: 64,
+          height: 75,
         },
+
+        // tabBarIconStyle: {
+        //   width: 64,
+        //   height: 64,
+        // },
       })}
     >
-      <Tabs.Screen name='index' options={{ headerShown: false, tabBarLabel: 'Index'}} />
+      <Tabs.Screen name='index' options={{ headerShown: false, tabBarLabel: 'Início' }} />
     </Tabs>
   );
 };
