@@ -1,12 +1,16 @@
-import { Button, Text } from 'react-native';
-import { Container } from './index.styles';
-import { router } from 'expo-router';
+import { Container, Logo, Title } from './index.styles';
+import logo from '@/assets/logo.png';
+import { LoginForm } from '@/components/LoginForm';
+// import { Redirect } from 'expo-router';
 
 export default function App() {
+  // return <Redirect href="(tabs)" />
+
   return (
     <Container>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <Button title="Press me" onPress={() => router.push('(tabs)')} />
+      <Logo source={logo} />
+      <Title>Lembrete de medicação</Title>
+      <LoginForm />
     </Container>
   );
 }
