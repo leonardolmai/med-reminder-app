@@ -1,6 +1,5 @@
-import React from 'react';
 // import { StatusBar } from 'expo-status-bar';
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from 'styled-components/native';
 import { theme } from '@/styles/theme';
 import { Stack } from 'expo-router';
 
@@ -8,10 +7,15 @@ export default function Layout() {
   return (
     <ThemeProvider theme={theme}>
       <Stack>
-        <Stack.Screen name='index' options={{headerShown: false}} />
-        <Stack.Screen name='(tabs)' options={{headerShown: false}} />
+        {/* <Stack initialRouteName='(tabs)'> */}
+        <Stack.Screen name='index' options={{ headerShown: false }} />
+        <Stack.Screen name='signup' options={{ headerShown: false }} />
+        <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+        <Stack.Screen name="users/update" options={{ headerShown: false }} />
+        <Stack.Screen name="medications/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="medications/create" options={{ headerShown: false }} />
+        <Stack.Screen name="medications/update/[id]" options={{ headerShown: false }} />
       </Stack>
-      {/* <StatusBar style="auto" backgroundColor={theme.colors.primary} /> */}
     </ThemeProvider>
   );
 };
