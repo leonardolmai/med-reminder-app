@@ -20,8 +20,3 @@ export const InputContainer = styled.TextInput<InputProps>`
   width: 100%;
 `;
 
-export const InputError = styled.Text`
-  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.red500};
-  font-size: 12px;
-  margin-top: 4px;
-`;
