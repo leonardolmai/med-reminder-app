@@ -39,6 +39,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   async function logout() {
     await AsyncStorage.clear();
     setUser(null);
+    router.replace('/');
   };
 
   async function updateAuthUser(updatedUser: User): Promise<void> {
