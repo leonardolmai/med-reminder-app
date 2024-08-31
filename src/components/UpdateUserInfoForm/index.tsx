@@ -3,22 +3,31 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { router } from 'expo-router';
-import { User } from '@/interfaces/User'
 import { Container } from './styles';
 import { schema, FormData } from '@/schemas/UpdateUserInfoFormSchema';
+import { useAuth } from '@/hooks/useAuth';
+import { updateUser } from '@/services/user';
+import { isAxiosError } from 'axios';
 
 export function UpdateUserInfoForm() {
   const { control, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: yupResolver(schema) as Resolver<FormData>,
   });
 
-  const user: User = {
-    id: 1,
-    name: 'Leonardo',
-    email: 'leonardo@example.com'
-  };
+  const { user, updateAuthUser } = useAuth();
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = async (data: FormData) => {
+    try {
+      const userUpdated = await updateUser({ id: user?.id || '', name: data.name || '', email: data.email });
+      if (userUpdated) {
+        updateAuthUser(userUpdated);
+      }
+
+    } catch (error) {
+      if (isAxiosError(error))
+        console.log(error?.response?.data);
+    }
+
     // console.log(data);
     // Alert.alert(data.email, data.password);
     router.back();
@@ -40,7 +49,7 @@ export function UpdateUserInfoForm() {
           />
         )}
         name="name"
-        defaultValue={user.name}
+        defaultValue={user?.name}
       />
 
       <Controller
@@ -57,7 +66,7 @@ export function UpdateUserInfoForm() {
           />
         )}
         name="email"
-        defaultValue={user.email}
+        defaultValue={user?.email}
       />
 
       <Button onPress={handleSubmit(onSubmit)}>Salvar</Button>
