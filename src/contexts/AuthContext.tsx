@@ -31,6 +31,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const user = await loginService({ email, password });
       setUser(user);
       await AsyncStorage.setItem("user", JSON.stringify(user));
+      router.replace('(tabs)');
     } catch (error) {
       throw error;
     }
