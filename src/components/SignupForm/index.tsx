@@ -1,4 +1,3 @@
-import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button } from '@/components/Button';
@@ -6,6 +5,9 @@ import { Input } from '@/components/Input';
 import { router } from 'expo-router';
 import { Container, SpanContainer, SpanLink, SpanText } from './styles';
 import { FormData, schema } from '@/schemas/SignupFormSchema';
+import { signupService } from '@/services/auth';
+import { isAxiosError } from 'axios';
+import { User } from '@/interfaces/User';
 
 export function SignupForm() {
   const { control, handleSubmit, formState: { errors } } = useForm<FormData>({
@@ -14,9 +16,16 @@ export function SignupForm() {
 
   // console.log(errors);
 
-  const onSubmit = (data: FormData) => {
-    // console.log(data);
-    // Alert.alert(data.email, data.password);
+  const onSubmit = async (data: FormData) => {
+    try {
+      const name = data.email.split('@')[0];
+      const user: User = await signupService({ name, email: data.email, password: data.password });
+
+    } catch (error) {
+      if (isAxiosError(error))
+        console.log(error?.response?.data);
+    }
+
     router.push('/');
   };
 
