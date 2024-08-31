@@ -2,8 +2,15 @@ import { Tabs } from 'expo-router';
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from 'styled-components/native';
 import { DefaultTheme } from 'styled-components/native';
+import { useAuthRedirect } from '@/hooks/useAuthRedirect';
 
 export default function TabLayout() {
+  const isAuthenticated = useAuthRedirect();
+  
+  if (!isAuthenticated) {
+    return null;
+  }
+
   const theme: DefaultTheme = useTheme();
 
   return (
