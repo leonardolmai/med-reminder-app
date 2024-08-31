@@ -5,22 +5,38 @@ import { Input } from '@/components/Input';
 import { router } from 'expo-router';
 import { Container, SpanContainer, SpanLink, SpanText } from './styles';
 import { schema, FormData } from '@/schemas/LoginFormSchema';
+import { useState } from 'react';
+import { ErrorText } from '@/components/ErrorText';
+import { useAuth } from '@/hooks/useAuth';
 
 export function LoginForm() {
   const { control, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: yupResolver(schema),
   });
 
+  const [generalError, setGeneralError] = useState<string | null>(null);
+
+  const { login } = useAuth();
+
   // console.log(errors);
 
-  const onSubmit = (data: FormData) => {
-    // console.log(data);
-    // Alert.alert(data.email, data.password);
-    router.push('(tabs)');
+  const onSubmit = async (data: FormData) => {
+    setGeneralError(null);
+    try {
+      await login(data);
+    } catch (error) {
+      console.log(error);
+      setGeneralError('Erro ao fazer login');
+      setTimeout(() => {
+        setGeneralError(null);
+      }, 5000);
+    }
   };
 
   return (
     <Container>
+      {generalError && <ErrorText style={{ marginBottom: 4 }}>{generalError}</ErrorText>}
+
       <Controller
         control={control}
         render={({ field: { onChange, onBlur, value } }) => (
