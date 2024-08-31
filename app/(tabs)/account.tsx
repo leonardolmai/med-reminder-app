@@ -2,19 +2,15 @@ import { AccountContainer, AccountOptionsContainer, Email, Name, Title, TitleCon
 import { screenHeight } from "@/utils/dimensions";
 import { AccountOption } from "@/components/AccountOption";
 import { router } from "expo-router";
-import { User } from "@/interfaces/User"
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Account() {
-  const user: User = {
-    id: 1,
-    name: "Leonardo",
-    email: "leonardo@example.com",
-  };
+  const { user, logout } = useAuth();
 
   const accountOptions = [1, 2];
 
   const onLogout = () => {
-    router.push('/');
+    logout();
   }
 
   const onEditPersonalInformation = () => {
@@ -27,8 +23,8 @@ export default function Account() {
         <Title>Conta</Title>
       </TitleContainer>
       <UserInformationContainer>
-        <Name>{user.name}</Name>
-        <Email>{user.email}</Email>
+        <Name>{user?.name}</Name>
+        <Email>{user?.email}</Email>
       </UserInformationContainer>
       <AccountOptionsContainer>
         <AccountOption onPress={onEditPersonalInformation}>Editar informações pessoais</AccountOption>
