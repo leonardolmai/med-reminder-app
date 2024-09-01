@@ -1,5 +1,5 @@
 export interface MedicationHistory {
-  id: number;
+  id: string;
   name: string;
   time: string;
   date: string;
