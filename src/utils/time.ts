@@ -10,3 +10,10 @@ export function getCurrentDate(): string {
   const date = `${day}/${month}/${today.getFullYear()}`;
   return date;
 }
+
+export function parseDateWithZeroedTime(dateString: string): Date {
+  const [day, month, year] = dateString.split('/').map(Number);
+  const date = new Date(year, month - 1, day);
+  date.setHours(0, 0, 0, 0);
+  return date;
+}
