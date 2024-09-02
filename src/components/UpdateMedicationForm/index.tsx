@@ -10,13 +10,17 @@ import { UpdateMedicationFormProps } from '@/interfaces/UpdateMedicationFormProp
 import { Picker } from '@react-native-picker/picker';
 import { View } from 'react-native';
 import { TimePickerField } from '@/components/TimePickerField';
+import { frequencyOptions } from '@/constants/frequencyOptions';
+import { createMedicationHistory, deleteMedicationHistory, getAllMedicationHistoriesOfMedication, updateMedication } from '@/services/medication';
+import { isAxiosError } from 'axios';
+import { useAuth } from '@/hooks/useAuth';
+import { useMedications } from '@/hooks/useMedications';
+import { MedicationHistory } from '@/interfaces/MedicationHistory';
+import { getCurrentDate } from '@/utils/time';
 
 export function UpdateMedicationForm({ medication }: UpdateMedicationFormProps) {
-  const frequencyOptions = [
-    { label: 'Diariamente', value: 'daily' },
-    { label: 'Duas vezes ao dia', value: 'twice_a_day' },
-    { label: 'Três vezes ao dia', value: 'three_times_a_day' },
-  ];
+  const { user } = useAuth();
+  const { fetchMedications, fetchMedicationHistory } = useMedications();
 
   const { control, handleSubmit, formState: { errors }, setValue } = useForm({
     resolver: yupResolver(schema) as Resolver<FormData>,
@@ -62,10 +66,55 @@ export function UpdateMedicationForm({ medication }: UpdateMedicationFormProps) 
     }
   }, [frequency]);
 
-  const onSubmit = (data: FormData) => {
-    // console.log(data);
-    // Alert.alert(data.email, data.password);
-    router.back();
+  const onSubmit = async (data: FormData) => {
+    try {
+      const schedulesWithId = (data.schedules ?? []).map((schedule, index) => ({ ...schedule, id: index.toString() }));
+      const medicationUpdated = await updateMedication({ ...data, id: medication.id, user_id: user?.id || '', schedules: schedulesWithId });
+
+      if (!medicationUpdated) {
+        return;
+      }
+
+      const date = getCurrentDate();
+
+      const medicationHistoriesOfMedication = await getAllMedicationHistoriesOfMedication(medicationUpdated.id);
+
+      const historiesToDelete = medicationHistoriesOfMedication.filter(history =>
+        history.date === date &&
+        !history.status &&
+        history.medication_id === medicationUpdated.id
+      );
+
+      await Promise.all(historiesToDelete.map(history => deleteMedicationHistory(history.id)));
+
+      const medicationHistory: Omit<MedicationHistory, "id">[] = medicationUpdated.schedules.map((schedule) => ({
+        medication_id: medicationUpdated.id,
+        user_id: medicationUpdated.user_id,
+        name: medicationUpdated.name,
+        dosage: medicationUpdated.dosage,
+        time: schedule.time,
+        date: date,
+        status: false,
+      }));
+
+      const currentTime = new Date().getTime();
+      const medicationHistoryToCreate = medicationHistory.filter((history) => {
+        const [hours, minutes] = history.time.split(':').map((timePart) => parseInt(timePart, 10));
+        const now = new Date();
+        const historyTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes).getTime();
+        return historyTime > currentTime;
+      });
+
+      await Promise.all(medicationHistoryToCreate.map(createMedicationHistory));
+
+      fetchMedicationHistory();
+      fetchMedications();
+    } catch (error) {
+      if (isAxiosError(error))
+        console.log(error?.response?.data);
+    }
+
+    router.push('(tabs)');
   };
 
   return (
