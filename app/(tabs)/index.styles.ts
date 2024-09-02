@@ -1,6 +1,5 @@
 import styled, { DefaultTheme } from "styled-components/native";
 import { FlatListProps } from "react-native";
-import { Medication } from "@/interfaces/Medication";
 import { MedicationHistory } from "@/interfaces/MedicationHistory";
 
 export const MedicationsContainer = styled.View`
@@ -17,7 +16,7 @@ export const Title = styled.Text`
   font-size: 32px;
 `;
 
-export const MedicationList = styled.FlatList<FlatListProps<Medication>>`
+export const MedicationList = styled.FlatList<FlatListProps<MedicationHistory>>`
   margin-left: 32px;
   margin-right: 32px;
   margin-bottom: 130px;
