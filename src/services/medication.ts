@@ -5,9 +5,9 @@ import { handleError } from "@/utils/handleError";
 import { getCurrentDate, parseDateWithZeroedTime } from "@/utils/time";
 import { AxiosResponse } from "axios";
 
-export async function getAllMedicationHistoriesOfMedication(medication_id: string): Promise<MedicationHistory[]> {
+export async function getAllMedicationHistoriesOfMedication(medication_id: string, user_id: string): Promise<MedicationHistory[]> {
   try {
-    const response: AxiosResponse<MedicationHistory[]> = await api.get(`/medication_history?medication_id=${medication_id}`);
+    const response: AxiosResponse<MedicationHistory[]> = await api.get(`/medication_history?medication_id=${medication_id}&user_id=${user_id}`);
     return response.data;
   } catch (error) {
     handleError(error);

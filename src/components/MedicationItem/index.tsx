@@ -39,7 +39,7 @@ export function MedicationItem({ medicationHistory }: MedicationItemProps) {
 
               const date = getCurrentDate();
 
-              const medicationHistoriesOfMedication = await getAllMedicationHistoriesOfMedication(medicationHistory.medication_id);
+              const medicationHistoriesOfMedication = await getAllMedicationHistoriesOfMedication(medicationHistory.medication_id, medicationHistory.user_id || '');
 
               const historiesToDelete = medicationHistoriesOfMedication.filter(history =>
                 history.date === date &&

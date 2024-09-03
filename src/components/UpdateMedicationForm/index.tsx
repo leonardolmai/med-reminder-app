@@ -77,7 +77,7 @@ export function UpdateMedicationForm({ medication }: UpdateMedicationFormProps) 
 
       const date = getCurrentDate();
 
-      const medicationHistoriesOfMedication = await getAllMedicationHistoriesOfMedication(medicationUpdated.id);
+      const medicationHistoriesOfMedication = await getAllMedicationHistoriesOfMedication(medicationUpdated.id, user?.id || '');
 
       const historiesToDelete = medicationHistoriesOfMedication.filter(history =>
         history.date === date &&
