@@ -1,5 +1,4 @@
 export interface Schedule {
-  id: number;
-  medication: number;
+  id: string;
   time: string;
 }

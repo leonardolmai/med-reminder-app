@@ -5,11 +5,12 @@ import { useTheme } from "styled-components/native";
 import { MedicationItem } from "@/components/MedicationItem";
 import { screenHeight } from "@/utils/dimensions";
 import { router } from "expo-router";
-import { Medication } from "@/interfaces/Medication";
-import { medications } from "@/utils/medications";
+import { useMedications } from "@/hooks/useMedications";
+import { MedicationHistory } from "@/interfaces/MedicationHistory";
 
 export default function Medications() {
   const theme = useTheme();
+  const { medications } = useMedications();
 
   const handlePressOnCreateButton = () => {
     router.push('/medications/create');
@@ -23,8 +24,8 @@ export default function Medications() {
       </TitleContainer>
       <MedicationList
         data={medications}
-        renderItem={({ item }: { item: Medication }) => <MedicationItem medication={item} />}
-        keyExtractor={(item: Medication) => item.id.toString()}
+        renderItem={({ item }: { item: MedicationHistory }) => <MedicationItem medicationHistory={item} />}
+        keyExtractor={(item: MedicationHistory) => item.id}
         showsVerticalScrollIndicator={false}
       />
     </MedicationsContainer>

@@ -1,6 +1,6 @@
-import { Medication } from "@/interfaces/Medication";
 import { TouchableOpacityProps } from "react-native";
+import { MedicationHistory } from "@/interfaces/MedicationHistory";
 
 export interface MedicationItemProps extends TouchableOpacityProps {
-  medication: Medication;
+  medicationHistory: MedicationHistory;
 }
