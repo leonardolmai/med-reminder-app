@@ -101,7 +101,7 @@ export async function getMedicationHistoriesToTake(user_id: string): Promise<Med
   try {
     const date = getCurrentDate();
 
-    const response: AxiosResponse<MedicationHistory[]> = await api.get(`/medication_history?user_id=${user_id}&status=false&date=${date}`);
+    const response: AxiosResponse<MedicationHistory[]> = await api.get(`/medication_history?user_id=${user_id}&status=false&date=${date}&_sort=time`);
 
     return response.data;
   } catch (error) {
