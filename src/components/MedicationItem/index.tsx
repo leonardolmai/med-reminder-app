@@ -9,10 +9,43 @@ import { formatTime, getCurrentDate } from "@/utils/time";
 import { deleteMedication, deleteMedicationHistory, getAllMedicationHistoriesOfMedication, updateMedicationHistory } from "@/services/medication";
 import { isAxiosError } from "axios";
 import { useMedications } from "@/hooks/useMedications";
+import * as Notifications from 'expo-notifications';
+import { useEffect, useState } from 'react';
 
 export function MedicationItem({ medicationHistory }: MedicationItemProps) {
   const theme = useTheme();
   const { fetchMedications, fetchMedicationHistory } = useMedications();
+  const [notificationId, setNotificationId] = useState<string | null>(null);
+  // notificationId on hooks? Or on Medication field?
+
+  useEffect(() => {
+    const scheduleNotification = async () => {
+      const [hours, minutes] = medicationHistory.time.split(':').map(Number);
+
+      const now = new Date();
+      const notificationTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+      // notificationTime.setMinutes(notificationTime.getMinutes() - 10);
+
+      if (notificationTime > now) {
+        const id = await Notifications.scheduleNotificationAsync({
+          content: {
+            title: 'Hora de tomar a medicação',
+            body: `${medicationHistory.name} - ${formatTime(medicationHistory.time)}`,
+          },
+          trigger: notificationTime,
+        });
+        setNotificationId(id);
+      }
+    };
+
+    scheduleNotification();
+
+    return () => {
+      if (notificationId) {
+        Notifications.cancelScheduledNotificationAsync(notificationId);
+      }
+    };
+  }, []);
 
   const handlePress = () => {
     router.push(`medications/${medicationHistory.medication_id}`);
@@ -40,6 +73,14 @@ export function MedicationItem({ medicationHistory }: MedicationItemProps) {
               const date = getCurrentDate();
 
               const medicationHistoriesOfMedication = await getAllMedicationHistoriesOfMedication(medicationHistory.medication_id, medicationHistory.user_id || '');
+
+              // const notificationIds = medicationHistoriesOfMedication.map(history => history.notificationId);
+              // await Promise.all(notificationIds.map(id => Notifications.cancelScheduledNotificationAsync(id)));
+
+              if (notificationId) {
+                await Notifications.cancelScheduledNotificationAsync(notificationId);
+              }
+              // medication history. notificationId
 
               const historiesToDelete = medicationHistoriesOfMedication.filter(history =>
                 history.date === date &&
@@ -75,6 +116,10 @@ export function MedicationItem({ medicationHistory }: MedicationItemProps) {
           onPress: async () => {
             try {
               const medicationHistoryUpdated = await updateMedicationHistory({ ...medicationHistory, status: true });
+
+              if (notificationId) {
+                await Notifications.cancelScheduledNotificationAsync(notificationId);
+              }
 
               fetchMedicationHistory();
               fetchMedications();
