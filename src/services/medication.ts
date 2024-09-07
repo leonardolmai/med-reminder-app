@@ -15,6 +15,16 @@ export async function getAllMedicationHistoriesOfMedication(medication_id: strin
   }
 }
 
+export async function getAllMedications(): Promise<Medication[]> {
+  try {
+    const response: AxiosResponse<Medication[]> = await api.get('/medications');
+    return response.data;
+  } catch (error) {
+    handleError(error);
+    throw error;
+  }
+}
+
 export async function getMedications(user_id: string): Promise<Medication[]> {
   try {
     const response: AxiosResponse<Medication[]> = await api.get(`/medications?user_id=${user_id}`);
