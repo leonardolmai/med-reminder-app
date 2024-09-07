@@ -4,6 +4,8 @@
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
+    "start:scheduler": "node scheduler.js",
+    "start:json-server": "json-server --watch db.json",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web"
@@ -20,6 +22,7 @@
     "expo-notifications": "~0.28.16",
     "expo-router": "~3.5.20",
     "expo-status-bar": "~1.12.1",
+    "node-cron": "^3.0.3",
     "react": "18.2.0",
     "react-hook-form": "^7.53.0",
     "react-native": "0.74.3",
@@ -31,6 +34,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@types/node-cron": "^3.0.11",
     "@types/react": "~18.2.45",
     "json-server": "^1.0.0-beta.2",
     "typescript": "^5.1.3"
